@@ -5,7 +5,7 @@
 # $ chmod +x ~/bin/heroku_logstalgia_formatter
 
 # Usage:
-# $ heroku logs -t --app {app} | heroku_logstalgia_formatter | logstalgia -
+# $ heroku logs -t --app {app} --ps router | heroku_logstalgia_formatter | logstalgia -
 
 require 'optparse'
 require 'pry'
@@ -16,9 +16,8 @@ $stdout.sync = true
 while input = ARGF.gets
   input.each_line do |line|
     parts       = line.split
-    next unless parts.size == 13
     timestamp   = DateTime.parse(parts[0]).to_time.to_i
-    ip          = parts[7].gsub("fwd=","").gsub('"','')
+    ip          = parts[7].gsub("fwd=","").gsub('"','').split(',')[0]
     request     = parts[4].gsub("path=","").gsub('"','')
     host        = parts[5].gsub("host=","").gsub('"','')
     dyno        = parts[8].gsub("dyno=","").gsub('"','')
